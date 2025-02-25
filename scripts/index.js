@@ -9,7 +9,7 @@ const placesList = document.querySelector('.places__list');
 // @todo: Функция создания карточки
 
 // принимает в аргументах данные одной карточки и функцию-колбэк для удаления
-function cardAdd (cardDataSource, cardRemoveCallback) {
+function addCard (cardDataSource, cardRemoveCallback) {
     // клонировать шаблон,
     const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
 
@@ -33,12 +33,12 @@ function cardAdd (cardDataSource, cardRemoveCallback) {
 
 // @todo: Функция удаления карточки
 
-function сardRemove(card) {
+function removeCard(card) {
     card.remove();
 }
 
 // @todo: Вывести карточки на страницу
 
 initialCards.forEach((cardDataSource) => {
-  placesList.append(cardAdd (cardDataSource, сardRemove));
+  placesList.append(addCard (cardDataSource, removeCard));
 });
