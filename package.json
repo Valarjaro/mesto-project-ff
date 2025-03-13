@@ -4,8 +4,9 @@
   "description": "https://github.com/Valarjaro/mesto-project-ff.git",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "build": "rm -rf dist && webpack --mode production",
+  "dev": "webpack serve --open"
+},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Valarjaro/mesto-project-ff.git"
