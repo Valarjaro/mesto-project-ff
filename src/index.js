@@ -96,3 +96,30 @@ function handleFormSubmit(evt) {
 // Прикрепляем обработчик к форме:
 // он будет следить за событием “submit” - «отправка»
 formElement.addEventListener('submit', handleFormSubmit);
+
+// 6. Добавление карточки
+
+// Находим форму в DOM
+const formNewPlace = page.querySelector(".popup_type_new-card .popup__form");
+
+// Находим поля формы в DOM
+const placeName = formNewPlace.querySelector(".popup__input_type_card-name");
+const placeImageUrl = formNewPlace.querySelector(".popup__input_type_url");
+
+formNewPlace.addEventListener("submit", function(evt){
+    evt.preventDefault();
+
+    const newPlace = {
+        name: placeName.value,
+        alt: placeName.value,
+        link: placeImageUrl.value,
+    };
+
+    //новая карточка попадала в начало контейнера с ними
+    placesList.prepend(addCard(newPlace, removeCard, showPopupImage));
+    
+    //А диалоговое окно после добавления автоматически закрывалось
+    closePopup(popupNewCard);
+    //и очищалась форма.
+    formNewPlace.reset();
+});
