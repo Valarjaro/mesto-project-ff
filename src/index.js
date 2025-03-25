@@ -35,6 +35,9 @@ initialCards.forEach((cardDataSource) => {
 
 //«Редактировать»
 buttonEdit.addEventListener('click', () => {
+    //При открытии формы поля «Имя» и «О себе» должны быть заполнены теми значениями, которые отображаются на странице.
+    nameInput.value = page.querySelector(".profile__title").textContent;
+    jobInput.value = page.querySelector(".profile__description").textContent;
     showPopup(popupEdit);
 })
 
@@ -61,3 +64,35 @@ popups.forEach((popup) => {
         closePopupClick(evt, popup);
     })
 })
+
+// 4 Редактирование имени и информации о себе
+
+// Находим форму в DOM
+const formElement = page.querySelector(".popup_type_edit .popup__form");
+
+// Находим поля формы в DOM
+// Получите значение полей jobInput и nameInput из свойства value
+const nameInput = formElement.querySelector(".popup__input_type_name");
+const jobInput = formElement.querySelector(".popup__input_type_description");
+
+
+// Обработчик «отправки» формы, хотя пока
+// она никуда отправляться не будет
+function handleFormSubmit(evt) {
+    evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
+                          // Так мы можем определить свою логику отправки.
+                          // О том, как это делать, расскажем позже.
+
+    
+    // Получите значение полей jobInput и nameInput из свойства value ???
+    // Выберите элементы, куда должны быть вставлены значения полей
+    let profileName = page.querySelector('.profile__title');
+    let profileJob = page.querySelector('.profile__description');
+    // Вставьте новые значения с помощью textContent
+    profileName.value = nameInput.textContent;
+    profileJob.value = jobInput.textContent;
+}
+
+// Прикрепляем обработчик к форме:
+// он будет следить за событием “submit” - «отправка»
+formElement.addEventListener('submit', handleFormSubmit);
