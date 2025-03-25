@@ -5,7 +5,7 @@ const cardTemplate = document.querySelector('#card-template').content;
 // @todo: Функция создания карточки
 
 // принимает в аргументах данные одной карточки и функцию-колбэк для удаления
-export function addCard (cardDataSource, cardRemoveCallback, showPopupImage) {
+export function addCard (cardDataSource, cardRemoveCallback, showPopupImage, likeCard) {
     // клонировать шаблон,
     const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
 
@@ -25,6 +25,10 @@ export function addCard (cardDataSource, cardRemoveCallback, showPopupImage) {
 
     //открытие попапа с картинкой
     cardImage.addEventListener('click', showPopupImage);
+
+    //лайк
+    const cardLikeButton = cardElement.querySelector(".card__like-button");
+    cardLikeButton.addEventListener("click", likeCard);
 
     // возвращает подготовленный к выводу элемент карточки
     return cardElement;

@@ -28,7 +28,7 @@ const popups = page.querySelectorAll('.popup');
 // @todo: Вывести карточки на страницу
 
 initialCards.forEach((cardDataSource) => {
-  placesList.append(addCard (cardDataSource, removeCard, showPopupImage));
+  placesList.append(addCard (cardDataSource, removeCard, showPopupImage, likeCard));
 });
 
 // 3. Работа модальных окон
@@ -123,3 +123,11 @@ formNewPlace.addEventListener("submit", function(evt){
     //и очищалась форма.
     formNewPlace.reset();
 });
+
+// 7. Лайк карточки
+
+export function likeCard(evt) {
+    if (evt.target.classList.contains('card__like-button')){
+        evt.target.classList.add('card__like-button_is-active');
+      }
+} 
