@@ -2,7 +2,7 @@ import './styles/index.css';
 
 import { initialCards } from "./scripts/cards.js";
 import { showPopup, closePopup, closePopupClick} from './components/modal.js';
-import { addCard,removeCard } from './components/card.js'
+import { addCard, removeCard, likeCard } from './components/card.js'
 
 
 // @todo: DOM узлы
@@ -116,18 +116,10 @@ formNewPlace.addEventListener("submit", function(evt){
     };
 
     //новая карточка попадала в начало контейнера с ними
-    placesList.prepend(addCard(newPlace, removeCard, showPopupImage));
+    placesList.prepend(addCard(newPlace, removeCard, showPopupImage, likeCard));
     
     //А диалоговое окно после добавления автоматически закрывалось
     closePopup(popupNewCard);
     //и очищалась форма.
     formNewPlace.reset();
 });
-
-// 7. Лайк карточки
-
-export function likeCard(evt) {
-    if (evt.target.classList.contains('card__like-button')){
-        evt.target.classList.add('card__like-button_is-active');
-      }
-} 

@@ -39,3 +39,13 @@ export function addCard (cardDataSource, cardRemoveCallback, showPopupImage, lik
 export function removeCard(card) {
     card.remove();
 }
+
+// 7. Лайк карточки
+
+export function likeCard(evt) {
+    if (evt.target.classList.contains('card__like-button_is-active')) {
+        evt.target.classList.remove('card__like-button_is-active');
+    } else {
+        evt.target.classList.add('card__like-button_is-active');
+    } 
+}
