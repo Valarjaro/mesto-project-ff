@@ -1,7 +1,7 @@
 import './styles/index.css';
 
 import { initialCards } from "./scripts/cards.js";
-import { showPopup, closePopup } from './components/modal.js';
+import { showPopup, closePopup, closePopupClick} from './components/modal.js';
 import { addCard,removeCard } from './components/card.js'
 
 
@@ -22,18 +22,42 @@ const popupNewCard = page.querySelector('.popup_type_new-card')
 const cardImage = content.querySelectorAll('.card__image');
 const popupImage = page.querySelector('.popup_type_image');
 
+const popups = page.querySelectorAll('.popup');
+
 // 5 спринт
 // @todo: Вывести карточки на страницу
 
 initialCards.forEach((cardDataSource) => {
-  placesList.append(addCard (cardDataSource, removeCard));
+  placesList.append(addCard (cardDataSource, removeCard, showPopupImage));
 });
 
 // 3. Работа модальных окон
 
+//«Редактировать»
 buttonEdit.addEventListener('click', () => {
     showPopup(popupEdit);
 })
+
+//«+»
 buttonAdd.addEventListener('click', () => {
     showPopup(popupNewCard);
+})
+
+//поиск карточки c картинкой на которую кликнули
+cardImage.forEach((item) => {
+    item.addEventListener('click', (evt) => {
+        showPopup(popupImage);
+    })
+})
+
+//при нажатии на картинку, передаем в addCard
+function showPopupImage(evt) {
+    showPopup(popupImage);
+}
+
+//закрытие попапа кликом
+popups.forEach((popup) => {
+    popup.addEventListener('click', (evt) => {
+        closePopupClick(evt, popup);
+    })
 })
