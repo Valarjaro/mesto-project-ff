@@ -55,6 +55,16 @@ cardImage.forEach((item) => {
 
 //при нажатии на картинку, передаем в addCard
 function showPopupImage(evt) {
+    // const cardContentImage = page.querySelector('.popup__image');
+    // const cardContentCaption = page.querySelector('.popup__caption');
+    // cardContentImage.src = evt.target.src;
+    // cardContentImage.alt = evt.target.alt;
+    // cardContentCaption.textContent = evt.target.alt;
+
+    // 8. Открытие попапа с картинкой
+    page.querySelector('.popup__image').setAttribute("src", evt.target.src);
+    page.querySelector('.popup__image').setAttribute("alt", evt.target.alt);
+    page.querySelector('.popup__caption').textContent = evt.target.alt;
     showPopup(popupImage);
 }
 
