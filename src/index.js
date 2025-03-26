@@ -19,7 +19,6 @@ const popupEdit = page.querySelector('.popup_type_edit');
 const buttonAdd = content.querySelector('.profile__add-button');
 const popupNewCard = page.querySelector('.popup_type_new-card')
 //при нажатии на картинку (любую)
-const cardImage = content.querySelectorAll('.card__image');
 const popupImage = page.querySelector('.popup_type_image');
 
 const popups = page.querySelectorAll('.popup');
@@ -44,13 +43,6 @@ buttonEdit.addEventListener('click', () => {
 //«+»
 buttonAdd.addEventListener('click', () => {
     showPopup(popupNewCard);
-})
-
-//поиск карточки c картинкой на которую кликнули
-cardImage.forEach((item) => {
-    item.addEventListener('click', (evt) => {
-        showPopup(popupImage);
-    })
 })
 
 //при нажатии на картинку, передаем в addCard
@@ -85,22 +77,21 @@ const formElement = page.querySelector(".popup_type_edit .popup__form");
 const nameInput = formElement.querySelector(".popup__input_type_name");
 const jobInput = formElement.querySelector(".popup__input_type_description");
 
-
 // Обработчик «отправки» формы, хотя пока
 // она никуда отправляться не будет
 function handleFormSubmit(evt) {
     evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
                           // Так мы можем определить свою логику отправки.
                           // О том, как это делать, расскажем позже.
-
     
     // Получите значение полей jobInput и nameInput из свойства value ???
     // Выберите элементы, куда должны быть вставлены значения полей
-    let profileName = page.querySelector('.profile__title');
-    let profileJob = page.querySelector('.profile__description');
+    const profileName = page.querySelector('.profile__title');
+    const profileJob = page.querySelector('.profile__description');
     // Вставьте новые значения с помощью textContent
-    profileName.value = nameInput.textContent;
-    profileJob.value = jobInput.textContent;
+    profileName.textContent = nameInput.value;
+    profileJob.textContent = jobInput.value;
+    closePopup(popupEdit);
 }
 
 // Прикрепляем обработчик к форме:
