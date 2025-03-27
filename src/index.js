@@ -34,13 +34,13 @@ initialCards.forEach((cardDataSource) => {
 
 //«Редактировать»
 
-const contentTitle = page.querySelector(".profile__title");
-const contentDescription = page.querySelector(".profile__description");
+const profileTitleContent = page.querySelector(".profile__title");
+const profileDescriptionContent = page.querySelector(".profile__description");
 
 buttonEdit.addEventListener('click', () => {
     //При открытии формы поля «Имя» и «О себе» должны быть заполнены теми значениями, которые отображаются на странице.
-    nameInput.value = contentTitle.textContent;
-    jobInput.value = contentDescription.textContent;
+    nameInput.value = profileTitleContent.textContent;
+    jobInput.value = profileDescriptionContent.textContent;
     showPopup(popupEdit);
 })
 
@@ -50,17 +50,16 @@ buttonAdd.addEventListener('click', () => {
 })
 
 //при нажатии на картинку, передаем в addCard
+const cardContentImage = page.querySelector('.popup__image');
+const cardContentCaption = page.querySelector('.popup__caption');
+
 function showPopupImage(evt) {
-    // const cardContentImage = page.querySelector('.popup__image');
-    // const cardContentCaption = page.querySelector('.popup__caption');
-    // cardContentImage.src = evt.target.src;
-    // cardContentImage.alt = evt.target.alt;
-    // cardContentCaption.textContent = evt.target.alt;
+
+    cardContentImage.src = evt.target.src;
+    cardContentImage.alt = evt.target.alt;
+    cardContentCaption.textContent = evt.target.alt;
 
     // 8. Открытие попапа с картинкой
-    page.querySelector('.popup__image').setAttribute("src", evt.target.src);
-    page.querySelector('.popup__image').setAttribute("alt", evt.target.alt);
-    page.querySelector('.popup__caption').textContent = evt.target.alt;
     showPopup(popupImage);
 }
 
