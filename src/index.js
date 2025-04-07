@@ -3,6 +3,7 @@ import './styles/index.css';
 import { initialCards } from "./scripts/cards.js";
 import { showPopup, closePopup, closePopupClick} from './components/modal.js';
 import { addCard, removeCard, likeCard } from './components/card.js'
+import { enableValidation } from './components/validation.js'
 
 
 // @todo: DOM узлы
@@ -39,6 +40,7 @@ const profileDescriptionContent = page.querySelector(".profile__description");
 
 buttonEdit.addEventListener('click', () => {
     //При открытии формы поля «Имя» и «О себе» должны быть заполнены теми значениями, которые отображаются на странице.
+    enableValidation();
     nameInput.value = profileTitleContent.textContent;
     jobInput.value = profileDescriptionContent.textContent;
     showPopup(popupEdit);
@@ -46,7 +48,8 @@ buttonEdit.addEventListener('click', () => {
 
 //«+»
 buttonAdd.addEventListener('click', () => {
-    showPopup(popupNewCard);
+  enableValidation();  
+  showPopup(popupNewCard);
 })
 
 //при нажатии на картинку, передаем в addCard
@@ -128,82 +131,3 @@ formNewPlace.addEventListener("submit", function(evt){
     //и очищалась форма.
     formNewPlace.reset();
 });
-
-// 7 спринт
-
-// 1. Валидация формы «Редактировать профиль»
-
-// enableValidation({
-//     formSelector: '.popup__form',
-//     inputSelector: '.popup__input',
-//     submitButtonSelector: '.popup__button',
-//     inactiveButtonClass: 'popup__button_disabled',
-//     inputErrorClass: 'popup__input_type_error',
-//     errorClass: 'popup__error_visible'
-//   });
-
-
-
-  function showInputError(formElement, inputElement, errorMessage) {
-    const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
-
-    inputElement.classList.add('popup__input_type_error');
-    errorElement.textContent = errorMessage;
-    errorElement.classList.add('popup__input-error_active');
-  };
-
-  function hideInputError(formElement, inputElement) {
-    const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
-
-    inputElement.classList.remove('popup__input_type_error');
-    errorElement.classList.remove('popup__input-error_active');
-    errorElement.textContent = '';
-  };
-
-  function isValid(formElement, inputElement) {
-    if (!inputElement.validity.valid) {
-        showInputError(formElement, inputElement, inputElement.validationMessage);
-    }
-    else {
-        hideInputError(formElement, inputElement);
-    }
-  };
-
-  function setEventListener(formElement) {
-    const inputList = Array.from(formElement.querySelectorAll('.popup__input'));
-    const buttonElement = formElement.querySelector('.popup__button');
-
-    inputList.forEach((inputElement) => {
-        inputElement.addEventListener('input', () => {
-            isValid(formElement, inputElement);
-            toggleButtonState(inputList, buttonElement);
-        });
-    });
-  };
-
-  function enableValidation() {
-    const formList = Array.from(document.querySelectorAll('.popup__form'))
-    formList.forEach((formElement) => {
-        setEventListener(formElement);
-  });
-};
-  enableValidation();
- 
-
-  function hasInvalidInput(inputList) {
-    return inputList.some((inputElement) => {return !inputElement.validity.valid;})
-  };
-
-  function toggleButtonState(inputList, buttonElement) {
-    if (hasInvalidInput(inputList)) {
-        // сделай кнопку неактивной
-        buttonElement.disabled = true;
-        buttonElement.classList.add('popup__button_disabled');
-      } else {
-        // иначе сделай кнопку активной
-        buttonElement.disabled = false;
-        buttonElement.classList.remove('popup__button_disabled');
-      }
-  };
-
-  // 1. Валидация формы «Редактировать профиль»
