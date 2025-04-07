@@ -1,9 +1,10 @@
 import './styles/index.css';
 
-import { initialCards } from "./scripts/cards.js";
+// import { initialCards } from "./scripts/cards.js";
 import { showPopup, closePopup, closePopupClick} from './components/modal.js';
-import { addCard, removeCard, likeCard } from './components/card.js'
-import { enableValidation } from './components/validation.js'
+import { addCard, removeCard, likeCard } from './components/card.js';
+import { enableValidation } from './components/validation.js';
+import { apiConfiguration } from './components/api.js';
 
 
 // @todo: DOM узлы
@@ -27,9 +28,11 @@ const popups = page.querySelectorAll('.popup');
 // 5 спринт
 // @todo: Вывести карточки на страницу
 
-initialCards.forEach((cardDataSource) => {
-  placesList.append(addCard (cardDataSource, removeCard, showPopupImage, likeCard));
-});
+
+// а от предыдущего способа отображения первоначальных карточек избавьтесь... эр ай пи
+// initialCards.forEach((cardDataSource) => {
+//   placesList.append(addCard (cardDataSource, removeCard, showPopupImage, likeCard));
+// });
 
 // 3. Работа модальных окон
 
@@ -131,3 +134,62 @@ formNewPlace.addEventListener("submit", function(evt){
     //и очищалась форма.
     formNewPlace.reset();
 });
+
+// 7 API
+
+// fetch(`${apiConfiguration.baseUrl}users/me`, {
+//          headers: {
+//              authorization: apiConfiguration.headers.authorization,
+//              'Content-Type': apiConfiguration.headers.ContentType
+//          }
+//      })
+//     //  .then(result => result.json())
+//      .then((res) => {
+//         return res.json();
+//   })
+//   .then((data) => {
+//     console.log(data);
+//     console.log(data.name); // если мы попали в этот then, data — это объект
+// })
+
+const profileImage = page.querySelector('.profile__image');
+
+function getProfileContent() {
+    fetch(`${apiConfiguration.baseUrl}users/me`, {
+        headers: {
+            authorization: apiConfiguration.headers.authorization,
+            'Content-Type': apiConfiguration.headers.ContentType
+        }
+    })
+    .then((res) => {
+        return res.json()
+      })
+    .then((res) => {
+        profileName.textContent = res.name;
+        profileJob.textContent = res.about;
+        profileImage.style = `background-image: url('${res.avatar}')`
+  })
+};
+
+getProfileContent();
+
+function getCardContent() {
+    fetch(`${apiConfiguration.baseUrl}cards`, {
+        headers: {
+            authorization: apiConfiguration.headers.authorization,
+            'Content-Type': apiConfiguration.headers.ContentType
+        }
+    })
+    .then((res) => {
+        return res.json()
+      })
+    .then(cards => {
+        // console.log(cards);
+        cards.forEach(card => {
+            const cardElement = addCard(card,removeCard, showPopupImage, likeCard);
+            placesList.append(cardElement);
+        })
+      })
+};
+
+getCardContent();
