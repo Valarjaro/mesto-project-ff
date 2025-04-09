@@ -184,7 +184,7 @@ function getCardContent() {
         return res.json()
       })
     .then(cards => {
-        // console.log(cards);
+        console.log(cards);
         cards.forEach(card => {
             const cardElement = addCard(card,removeCard, showPopupImage, likeCard);
             placesList.append(cardElement);
@@ -193,3 +193,53 @@ function getCardContent() {
 };
 
 getCardContent();
+
+const newCardDescription = 'Безмятежный утёс';
+const newCardSource = 'https://avatars.dzeninfra.ru/get-zen_doc/2046228/pub_5f111b5a95e2d531097b9601_5f1121dc550986574d5dd891/scale_1200'
+
+function postNewCard(description, source){
+    return fetch(`${apiConfiguration.baseUrl}cards`, {
+        method: 'POST',
+        headers: {
+            authorization: apiConfiguration.headers.authorization,
+            'Content-Type': apiConfiguration.headers.ContentType
+        },
+        body: JSON.stringify({
+            name: description,
+            link: source
+        })
+    }).then(res => res.json())
+}
+
+// getCardContent();
+
+function deleteCard() {
+    return fetch(`${apiConfiguration.baseUrl}/cards/67f65c6819bdb0009a2e8348`, {
+        method: 'DELETE',
+        headers: {
+            authorization: apiConfiguration.headers.authorization,
+            'Content-Type': apiConfiguration.headers.ContentType
+        },
+    })
+}
+
+// deleteCard();
+
+// function editProfile() {
+//     fetch(`${apiConfiguration.baseUrl}users/me `, {
+//         method: 'PATCH',
+//         headers: {
+//             authorization: apiConfiguration.headers.authorization,
+//             'Content-Type': apiConfiguration.headers.ContentType
+//         },
+//         body: JSON.stringify({
+//             name: 'Valarjar',
+//             about: 'middlender'
+//         })
+//     })
+//     .then((res) => {
+//         return res.json()
+//       })
+// };
+
+// editProfile();
