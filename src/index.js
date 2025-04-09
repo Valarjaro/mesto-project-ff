@@ -4,13 +4,12 @@ import './styles/index.css';
 import { showPopup, closePopup, closePopupClick} from './components/modal.js';
 import { addCard, removeCard, likeCard } from './components/card.js';
 import { enableValidation } from './components/validation.js';
-import { apiConfiguration } from './components/api.js';
+import { getProfileContent, getCardContent, patchProfile, postNewCard} from './components/api.js';
 
 
 // @todo: DOM узлы
 const page = document.querySelector('.page__content');
 const content = page.querySelector('.content');
-
 const placesList = content.querySelector('.places__list');
 
 //три модальных окна
@@ -25,14 +24,35 @@ const popupImage = page.querySelector('.popup_type_image');
 
 const popups = page.querySelectorAll('.popup');
 
-// 5 спринт
-// @todo: Вывести карточки на страницу
+//Профиль
+const profileImage = page.querySelector('.profile__image');
+const profileName = page.querySelector('.profile__title');
+const profileJob = page.querySelector('.profile__description');
 
+// 7 API Загрузка карточек с сервера
+function getPageContent() {
+    // Поэтому для загрузки данных пользователя и карточек необходимо воспользоваться методом Promise.all()
+    Promise.all([getProfileContent(), getCardContent()])
+         .then(([getProfileContentRes, getCardContentRes]) => {
+             profileName.textContent = getProfileContentRes.name;
+             profileJob.textContent = getProfileContentRes.about;
+             profileImage.src = getProfileContentRes.avatar;
+             profileImage.alt = `Это ${getProfileContentRes.name}`;
+             placesList.innerHTML = '';
+        
+             getCardContentRes.forEach(function (item) {
+                 const receivedCardContent = {
+                    name: item.name,
+                    alt: item.name,
+                    link: item.link,
+                };
+                 placesList.append(addCard(receivedCardContent,removeCard, showPopupImage, likeCard));
+             });
+         })
+         .catch(error => { console.error(error) })
+}
 
-// а от предыдущего способа отображения первоначальных карточек избавьтесь... эр ай пи
-// initialCards.forEach((cardDataSource) => {
-//   placesList.append(addCard (cardDataSource, removeCard, showPopupImage, likeCard));
-// });
+getPageContent();
 
 // 3. Работа модальных окон
 
@@ -86,9 +106,6 @@ const formEdit = page.querySelector(".popup_type_edit .popup__form");
 const nameInput = formEdit.querySelector(".popup__input_type_name");
 const jobInput = formEdit.querySelector(".popup__input_type_description");
 
-const profileName = page.querySelector('.profile__title');
-const profileJob = page.querySelector('.profile__description');
-
 // Обработчик «отправки» формы, хотя пока
 // она никуда отправляться не будет
 function handleFormEditSubmit(evt) {
@@ -98,9 +115,9 @@ function handleFormEditSubmit(evt) {
     
     // Получите значение полей jobInput и nameInput из свойства value ???
     // Выберите элементы, куда должны быть вставлены значения полей
-    // Вставьте новые значения с помощью textContent
-    profileName.textContent = nameInput.value;
-    profileJob.textContent = jobInput.value;
+
+    // API 5. Редактирование профиля
+    patchProfile(nameInput.value, jobInput.value).then(getPageContent())
     closePopup(popupEdit);
 }
 
@@ -126,7 +143,10 @@ formNewPlace.addEventListener("submit", function(evt){
         link: placeImageUrl.value,
     };
 
-    //новая карточка попадала в начало контейнера с ними
+    postNewCard(newPlace).then(getPageContent());
+
+
+    // //новая карточка попадала в начало контейнера с ними
     placesList.prepend(addCard(newPlace, removeCard, showPopupImage, likeCard));
     
     //А диалоговое окно после добавления автоматически закрывалось
@@ -134,112 +154,3 @@ formNewPlace.addEventListener("submit", function(evt){
     //и очищалась форма.
     formNewPlace.reset();
 });
-
-// 7 API
-
-// fetch(`${apiConfiguration.baseUrl}users/me`, {
-//          headers: {
-//              authorization: apiConfiguration.headers.authorization,
-//              'Content-Type': apiConfiguration.headers.ContentType
-//          }
-//      })
-//     //  .then(result => result.json())
-//      .then((res) => {
-//         return res.json();
-//   })
-//   .then((data) => {
-//     console.log(data);
-//     console.log(data.name); // если мы попали в этот then, data — это объект
-// })
-
-const profileImage = page.querySelector('.profile__image');
-
-function getProfileContent() {
-    fetch(`${apiConfiguration.baseUrl}users/me`, {
-        headers: {
-            authorization: apiConfiguration.headers.authorization,
-            'Content-Type': apiConfiguration.headers.ContentType
-        }
-    })
-    .then((res) => {
-        return res.json()
-      })
-    .then((res) => {
-        profileName.textContent = res.name;
-        profileJob.textContent = res.about;
-        profileImage.style = `background-image: url('${res.avatar}')`
-  })
-};
-
-getProfileContent();
-
-function getCardContent() {
-    fetch(`${apiConfiguration.baseUrl}cards`, {
-        headers: {
-            authorization: apiConfiguration.headers.authorization,
-            'Content-Type': apiConfiguration.headers.ContentType
-        }
-    })
-    .then((res) => {
-        return res.json()
-      })
-    .then(cards => {
-        console.log(cards);
-        cards.forEach(card => {
-            const cardElement = addCard(card,removeCard, showPopupImage, likeCard);
-            placesList.append(cardElement);
-        })
-      })
-};
-
-getCardContent();
-
-const newCardDescription = 'Безмятежный утёс';
-const newCardSource = 'https://avatars.dzeninfra.ru/get-zen_doc/2046228/pub_5f111b5a95e2d531097b9601_5f1121dc550986574d5dd891/scale_1200'
-
-function postNewCard(description, source){
-    return fetch(`${apiConfiguration.baseUrl}cards`, {
-        method: 'POST',
-        headers: {
-            authorization: apiConfiguration.headers.authorization,
-            'Content-Type': apiConfiguration.headers.ContentType
-        },
-        body: JSON.stringify({
-            name: description,
-            link: source
-        })
-    }).then(res => res.json())
-}
-
-// getCardContent();
-
-function deleteCard() {
-    return fetch(`${apiConfiguration.baseUrl}/cards/67f65c6819bdb0009a2e8348`, {
-        method: 'DELETE',
-        headers: {
-            authorization: apiConfiguration.headers.authorization,
-            'Content-Type': apiConfiguration.headers.ContentType
-        },
-    })
-}
-
-// deleteCard();
-
-// function editProfile() {
-//     fetch(`${apiConfiguration.baseUrl}users/me `, {
-//         method: 'PATCH',
-//         headers: {
-//             authorization: apiConfiguration.headers.authorization,
-//             'Content-Type': apiConfiguration.headers.ContentType
-//         },
-//         body: JSON.stringify({
-//             name: 'Valarjar',
-//             about: 'middlender'
-//         })
-//     })
-//     .then((res) => {
-//         return res.json()
-//       })
-// };
-
-// editProfile();
