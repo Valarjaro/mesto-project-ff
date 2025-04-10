@@ -4,7 +4,7 @@ import './styles/index.css';
 import { showPopup, closePopup, closePopupClick} from './components/modal.js';
 import { addCard, removeCard, likeCard } from './components/card.js';
 import { enableValidation } from './components/validation.js';
-import { getProfileContent, getCardContent, patchProfile, postNewCard } from './components/api.js';
+import { getProfileContent, getCardContent, patchProfile, postNewCard, patchAvatar } from './components/api.js';
 
 
 // @todo: DOM узлы
@@ -12,7 +12,9 @@ const page = document.querySelector('.page__content');
 const content = page.querySelector('.content');
 const placesList = content.querySelector('.places__list');
 
-//три модальных окна
+
+const popups = page.querySelectorAll('.popup');
+//четыре модальных окна
 //«Редактировать»
 const buttonEdit = content.querySelector('.profile__edit-button');
 const popupEdit = page.querySelector('.popup_type_edit');
@@ -21,8 +23,10 @@ const buttonAdd = content.querySelector('.profile__add-button');
 const popupNewCard = page.querySelector('.popup_type_new-card')
 //при нажатии на картинку (любую)
 const popupImage = page.querySelector('.popup_type_image');
+//новый аватар
+const avatarEdit =content.querySelector('.profile__image-wrapper');
+const popupNewAvatar = page.querySelector('.popup_type_new-avatar');
 
-const popups = page.querySelectorAll('.popup');
 
 //Профиль
 const profileImage = page.querySelector('.profile__image');
@@ -95,6 +99,12 @@ function showPopupImage(evt) {
     showPopup(popupImage);
 }
 
+//открытие попапа редактирования аватара
+avatarEdit.addEventListener('click', () => {
+    enableValidation();  
+    showPopup(popupNewAvatar);
+  })
+
 //закрытие попапа кликом
 popups.forEach((popup) => {
     popup.addEventListener('click', (evt) => {
@@ -112,16 +122,8 @@ const formEdit = page.querySelector(".popup_type_edit .popup__form");
 const nameInput = formEdit.querySelector(".popup__input_type_name");
 const jobInput = formEdit.querySelector(".popup__input_type_description");
 
-// Обработчик «отправки» формы, хотя пока
-// она никуда отправляться не будет
 function handleFormEditSubmit(evt) {
-    evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
-                          // Так мы можем определить свою логику отправки.
-                          // О том, как это делать, расскажем позже.
-    
-    // Получите значение полей jobInput и nameInput из свойства value ???
-    // Выберите элементы, куда должны быть вставлены значения полей
-
+    evt.preventDefault();
     // API 5. Редактирование профиля
     patchProfile(nameInput.value, jobInput.value).then(getPageContent())
     closePopup(popupEdit);
@@ -159,4 +161,21 @@ formNewPlace.addEventListener("submit", function(evt){
     closePopup(popupNewCard);
     //и очищалась форма.
     formNewPlace.reset();
+});
+
+// 10 Редактирование аватара
+const formNewAvatar = page.querySelector(".popup_type_new-avatar .popup__form");
+const newAvatarSrc = formNewAvatar.querySelector(".popup__input_type_url");
+
+formNewAvatar.addEventListener("submit", function(evt){
+    evt.preventDefault();
+
+    patchAvatar(newAvatarSrc.value)
+        .then(res => {
+            profileImage.src = res.avatar;
+            closePopup(popupNewAvatar);
+        })
+        
+        formNewAvatar.reset();
+    // closePopup(popupNewAvatar);
 });

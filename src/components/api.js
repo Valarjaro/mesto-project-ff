@@ -111,3 +111,21 @@ export function deleteCard(cardId) {
         },
     })
 }
+
+// 10 Обновление аватара пользователя
+
+export function patchAvatar(newAvatarSrc) {
+    return fetch(`${apiConfiguration.baseUrl}users/me/avatar`, {
+        method: 'PATCH',
+        headers: {
+            authorization: apiConfiguration.headers.authorization,
+            'Content-Type': apiConfiguration.headers.ContentType,
+        },
+        body: JSON.stringify({
+            avatar: newAvatarSrc
+        })
+    })
+    .then((res) => {
+        return res.json()
+      })
+}

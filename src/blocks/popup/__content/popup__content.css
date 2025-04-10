@@ -17,3 +17,8 @@
     padding: 30px 20px;
   }
 }
+
+/* min-height для попапа обновления аватара по макету */
+.popup_type_new-avatar .popup__content {
+  min-height: 272px;
+}

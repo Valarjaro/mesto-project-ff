@@ -12,15 +12,21 @@
     <img src="<%=require('./images/logo.svg')%>" alt="Логотип проекта масто" class="logo header__logo">
   </header>
   <main class="content">
+
     <section class="profile page__section">
-      <img class="profile__image" src="<%=require('./images/avatar.jpg')%>">
+      <!-- обертка для позиционирования иконки -->
+      <div class="profile__image-wrapper">
+        <img class="profile__image" src="">
+      </div>
+
       <div class="profile__info">
-        <h1 class="profile__title">Жак-Ив Кусто</h1>
+        <h1 class="profile__title"></h1>
         <button class="profile__edit-button" type="button"></button>
-        <p class="profile__description">Исследователь океана</p>
+        <p class="profile__description"></p>
       </div>
       <button class="profile__add-button" type="button"></button>
     </section>
+
     <section class="places page__section">
       <ul class="places__list">
       </ul>
@@ -66,6 +72,18 @@
       <button type="button" class="popup__close"></button>
       <img src="" alt="" class="popup__image">
       <p class="popup__caption"></p>
+    </div>
+  </div>
+  <!-- Эту форму нужно сделать. В ней должно быть одно поле — ссылка на новый аватар -->
+  <div class="popup popup_type_new-avatar popup_is-animated">
+    <div class="popup__content">
+      <button type="button" class="popup__close"></button>
+      <h3 class="popup__title">Обновить аватар</h3>
+      <form class="popup__form" name="new-avatar">
+        <input type="url" id="new-avatar-link-input" name="avatar" class="popup__input popup__input_type_url" placeholder="Ссылка на новый аватар" required>
+        <span class="new-avatar-link-input-error"></span>
+        <button type="submit" class="button popup__button">Сохранить</button>
+      </form>
     </div>
   </div>
 </div>
