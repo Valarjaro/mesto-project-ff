@@ -99,3 +99,15 @@ export function deleteLike(cardId) {
         return res.json()
       })
 }
+
+// 8. Удаление карточки
+
+export function deleteCard(cardId) {
+    return fetch(`${apiConfiguration.baseUrl}cards/${cardId}`, {
+        method: 'DELETE',
+        headers: {
+            authorization: apiConfiguration.headers.authorization,
+            'Content-Type': apiConfiguration.headers.ContentType
+        },
+    })
+}

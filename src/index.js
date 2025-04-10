@@ -38,8 +38,7 @@ function getPageContent() {
              profileJob.textContent = getProfileContentRes.about;
              profileImage.src = getProfileContentRes.avatar;
              profileImage.alt = `Это ${getProfileContentRes.name}`;
-             placesList.innerHTML = '';
-            
+             placesList.innerHTML = ''; 
             //  console.log(getProfileContentRes)
             //  console.log(getCardContentRes)
              getCardContentRes.forEach(function (item) {
@@ -47,12 +46,13 @@ function getPageContent() {
                 item.likes.forEach((profile) => {
                     likedByMe = profile._id === getProfileContentRes._id
                 })  
+                const cardByMe = getProfileContentRes._id === item.owner._id;
                 const receivedCardContent = {
                     name: item.name,
                     alt: item.name,
                     link: item.link,
                 };
-                 placesList.append(addCard(receivedCardContent,removeCard, showPopupImage, likeCard, item._id, item.likes.length, likedByMe));
+                 placesList.append(addCard(receivedCardContent,removeCard, showPopupImage, likeCard, item._id, item.likes.length, likedByMe, cardByMe));
              });
          })
          .catch(error => { console.error(error) })

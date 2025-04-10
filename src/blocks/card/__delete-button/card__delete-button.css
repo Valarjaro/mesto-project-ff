@@ -21,3 +21,8 @@
 .card__delete-button:hover {
   opacity: 0.6;
 }
+
+/* 8. Удаление карточки */
+.card__delete-button-hidden {
+  display: none;
+}
