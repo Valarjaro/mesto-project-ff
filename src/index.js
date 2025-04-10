@@ -4,7 +4,7 @@ import './styles/index.css';
 import { showPopup, closePopup, closePopupClick} from './components/modal.js';
 import { addCard, removeCard, likeCard } from './components/card.js';
 import { enableValidation } from './components/validation.js';
-import { getProfileContent, getCardContent, patchProfile, postNewCard} from './components/api.js';
+import { getProfileContent, getCardContent, patchProfile, postNewCard } from './components/api.js';
 
 
 // @todo: DOM узлы
@@ -39,14 +39,20 @@ function getPageContent() {
              profileImage.src = getProfileContentRes.avatar;
              profileImage.alt = `Это ${getProfileContentRes.name}`;
              placesList.innerHTML = '';
-        
+            
+            //  console.log(getProfileContentRes)
+            //  console.log(getCardContentRes)
              getCardContentRes.forEach(function (item) {
-                 const receivedCardContent = {
+                let likedByMe
+                item.likes.forEach((profile) => {
+                    likedByMe = profile._id === getProfileContentRes._id
+                })  
+                const receivedCardContent = {
                     name: item.name,
                     alt: item.name,
                     link: item.link,
                 };
-                 placesList.append(addCard(receivedCardContent,removeCard, showPopupImage, likeCard));
+                 placesList.append(addCard(receivedCardContent,removeCard, showPopupImage, likeCard, item._id, item.likes.length, likedByMe));
              });
          })
          .catch(error => { console.error(error) })

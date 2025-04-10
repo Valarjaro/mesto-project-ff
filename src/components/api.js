@@ -71,3 +71,31 @@ export function postNewCard(newCard){
         return res.json()
       })
 }
+
+// 7. Отображение количества лайков карточки
+
+export function putLike(cardId) {
+    return fetch(`${apiConfiguration.baseUrl}cards/likes/${cardId}`, {
+        method: 'PUT',
+        headers: {
+            authorization: apiConfiguration.headers.authorization,
+            'Content-Type': apiConfiguration.headers.ContentType,
+        },
+    })
+    .then((res) => {
+        return res.json()
+      })
+}
+
+export function deleteLike(cardId) {
+    return fetch(`${apiConfiguration.baseUrl}cards/likes/${cardId}`, {
+        method: 'DELETE',
+        headers: {
+            authorization: apiConfiguration.headers.authorization,
+            'Content-Type': apiConfiguration.headers.ContentType,
+        },
+    })
+    .then((res) => {
+        return res.json()
+      })
+}
