@@ -5,6 +5,14 @@ const apiConfiguration = {
     ContentType: "application/json",
   },
 };
+
+function checkResponse(res) {
+  if (res.ok) {
+    return res.json();
+  }
+  return Promise.reject(`Ошибка: ${res.status} ${res.statusText}`);
+}
+
 // Профиль
 // 3. Загрузка информации о пользователе с сервера
 export function getProfileContent() {
@@ -13,12 +21,7 @@ export function getProfileContent() {
       authorization: apiConfiguration.headers.authorization,
       "Content-Type": apiConfiguration.headers.ContentType,
     },
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then(checkResponse);
 }
 
 // 5. Редактирование профиля
@@ -33,12 +36,7 @@ export function patchProfile(newProfileName, newProfileJob) {
       name: newProfileName,
       about: newProfileJob,
     }),
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then(checkResponse);
 }
 
 // Карточки
@@ -50,12 +48,7 @@ export function getCardContent() {
       authorization: apiConfiguration.headers.authorization,
       "Content-Type": apiConfiguration.headers.ContentType,
     },
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then(checkResponse);
 }
 
 // 6. Добавление новой карточки
@@ -72,12 +65,7 @@ export function postNewCard(newCard) {
       alt: newCard.name,
       link: newCard.link,
     }),
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then(checkResponse);
 }
 
 // 7. Отображение количества лайков карточки
@@ -89,12 +77,7 @@ export function putLike(cardId) {
       authorization: apiConfiguration.headers.authorization,
       "Content-Type": apiConfiguration.headers.ContentType,
     },
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then(checkResponse);
 }
 
 export function deleteLike(cardId) {
@@ -104,12 +87,7 @@ export function deleteLike(cardId) {
       authorization: apiConfiguration.headers.authorization,
       "Content-Type": apiConfiguration.headers.ContentType,
     },
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then(checkResponse);
 }
 
 // 8. Удаление карточки
@@ -136,10 +114,5 @@ export function patchAvatar(newAvatarSrc) {
     body: JSON.stringify({
       avatar: newAvatarSrc,
     }),
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then(checkResponse);
 }

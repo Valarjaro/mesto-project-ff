@@ -7,7 +7,7 @@ const cardTemplate = document.querySelector('#card-template').content;
 // @todo: Функция создания карточки
 
 // принимает в аргументах данные одной карточки и функцию-колбэк для удаления
-export function addCard (cardDataSource, cardRemoveCallback, showPopupImage, likeCard, cardId, likeCount, likedByMe, cardByMe) {
+export function addCard (cardDataSource, cardRemoveCallback, showPopupImage, likeCard, myId, item) {
     // клонировать шаблон,
     const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
 
@@ -16,22 +16,25 @@ export function addCard (cardDataSource, cardRemoveCallback, showPopupImage, lik
     const cardLikeButton = cardElement.querySelector(".card__like-button");
     const cardLikeCounter = cardElement.querySelector(".card__like-counter");
     const cardDeleteButton = cardElement.querySelector(".card__delete-button");
+    
     // установить значения вложенных элементов,
     cardImage.src = cardDataSource.link;  
     cardImage.alt = cardDataSource.name;
     cardTitle.textContent = cardDataSource.name;
-    cardLikeCounter.textContent = likeCount;
-    cardElement.id = cardId;
+    cardLikeCounter.textContent = item.likes.length;
+    cardElement.id = item._id;
 
-    // // добавить к иконке удаления обработчик клика, по которому будет вызван переданный в аргументах колбэк.
-    // cardDeleteButton.addEventListener('click', function() {
-    //     cardRemoveCallback(cardElement);
-    // });
+    let likedByMe
+    item.likes.forEach((profile) => {
+        likedByMe = profile._id === myId
+        })
+        const cardByMe = myId === item.owner._id;
+
     //открытие попапа с картинкой
     cardImage.addEventListener('click', showPopupImage);
     //лайк    
     cardLikeButton.addEventListener('click', (evt) => {
-        likeCard(evt, cardId)});
+        likeCard(evt, item._id)});
     //проверка на карточки которым я поставил лайк    
     if (likedByMe) {
         cardLikeButton.classList.add('card__like-button_is-active');
@@ -42,18 +45,11 @@ export function addCard (cardDataSource, cardRemoveCallback, showPopupImage, lik
     
     if (cardByMe) {
         cardDeleteButton.addEventListener('click', () => {
-            removeCard(cardElement, cardId);
+            cardRemoveCallback(cardElement, item._id);
         });
     } else {
         cardDeleteButton.classList.add('card__delete-button-hidden');
     }
-
-
-    if (cardByMe) {
-        cardDeleteButton.addEventListener('click', () => {
-            removeCard(cardElement, cardId);
-         });
-        }
     // возвращает подготовленный к выводу элемент карточки
     return cardElement;
 }
@@ -61,8 +57,13 @@ export function addCard (cardDataSource, cardRemoveCallback, showPopupImage, lik
 // @todo: Функция удаления карточки
 
 export function removeCard(card, cardId) {
-    deleteCard(cardId);
-    card.remove();
+    deleteCard(cardId)
+        .then(function() {
+            card.remove()
+        })
+        .catch(function(err) {
+            console.error('Ошибка:', err);
+        })
 }
 
 // 7. Лайк карточки
@@ -74,7 +75,9 @@ export function likeCard(evt, cardId) {
     const targetCardLikeCounter = cardItem.querySelector('.card__like-counter')
 
     apiAction.then(function(res) {
-        
         targetCardLikeCounter.textContent = res.likes.length;
-    });
+    })
+    .catch(function(err) {
+        console.error('Ошибка:', err);
+    })
 }

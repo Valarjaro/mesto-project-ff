@@ -37,32 +37,42 @@ const profileJob = page.querySelector('.profile__description');
 function getPageContent() {
     // Поэтому для загрузки данных пользователя и карточек необходимо воспользоваться методом Promise.all()
     Promise.all([getProfileContent(), getCardContent()])
-         .then(([getProfileContentRes, getCardContentRes]) => {
-             profileName.textContent = getProfileContentRes.name;
-             profileJob.textContent = getProfileContentRes.about;
-             profileImage.src = getProfileContentRes.avatar;
-             profileImage.alt = `Это ${getProfileContentRes.name}`;
+         .then(([profileContentRes, cardContentRes]) => {
+             profileName.textContent = profileContentRes.name;
+             profileJob.textContent = profileContentRes.about;
+             profileImage.src = profileContentRes.avatar;
+             profileImage.alt = `Это ${profileContentRes.name}`;
              placesList.innerHTML = ''; 
-            //  console.log(getProfileContentRes)
-            //  console.log(getCardContentRes)
-             getCardContentRes.forEach(function (item) {
-                let likedByMe
-                item.likes.forEach((profile) => {
-                    likedByMe = profile._id === getProfileContentRes._id
-                })  
-                const cardByMe = getProfileContentRes._id === item.owner._id;
+
+             cardContentRes.forEach(function (item) {
+                // let likedByMe
+                // item.likes.forEach((profile) => {
+                //     likedByMe = profile._id === profileContentRes._id
+                // })  
+                // const cardByMe = profileContentRes._id === item.owner._id;
                 const receivedCardContent = {
                     name: item.name,
                     alt: item.name,
                     link: item.link,
                 };
-                 placesList.append(addCard(receivedCardContent,removeCard, showPopupImage, likeCard, item._id, item.likes.length, likedByMe, cardByMe));
+                 placesList.append(addCard(receivedCardContent, removeCard, showPopupImage, likeCard, profileContentRes._id, item));
              });
          })
          .catch(error => { console.error(error) })
 }
 
 getPageContent();
+
+const validationConfig = {
+    formSelector: '.popup__form',
+    inputSelector: '.popup__input',
+    submitButtonSelector: '.popup__button',
+    inactiveButtonClass: 'popup__button_disabled',
+    inputErrorClass: 'popup__input_type_error',
+    errorClass: 'popup__error_visible'
+  }
+
+enableValidation(validationConfig); 
 
 // 3. Работа модальных окон
 
@@ -73,15 +83,13 @@ const profileDescriptionContent = page.querySelector(".profile__description");
 
 buttonEdit.addEventListener('click', () => {
     //При открытии формы поля «Имя» и «О себе» должны быть заполнены теми значениями, которые отображаются на странице.
-    enableValidation();
     nameInput.value = profileTitleContent.textContent;
     jobInput.value = profileDescriptionContent.textContent;
     showPopup(popupEdit);
 })
 
 //«+»
-buttonAdd.addEventListener('click', () => {
-  enableValidation();  
+buttonAdd.addEventListener('click', () => { 
   showPopup(popupNewCard);
 })
 
@@ -101,7 +109,6 @@ function showPopupImage(evt) {
 
 //открытие попапа редактирования аватара
 avatarEdit.addEventListener('click', () => {
-    enableValidation();  
     showPopup(popupNewAvatar);
   })
 
@@ -133,9 +140,10 @@ formEdit.addEventListener('submit', function(evt){
 
     // API 5. Редактирование профиля
     patchProfile(nameInput.value, jobInput.value)
-        .then(function() {
-            return getPageContent();
-        })
+        .then((profileData) => {
+        profileName.textContent = profileData.name;
+        profileJob.textContent = profileData.about;
+        }) 
         .then(function() {
             closePopup(popupEdit);
             formEdit.reset();
@@ -174,12 +182,9 @@ formNewPlace.addEventListener("submit", function(evt){
     submitButton.disabled = true;
 
     postNewCard(newPlace)
-        .then(function() {
-        return getPageContent();
-        })
-        .then(function() {
+        .then((cardData) => {
             // Добавляем новую карточку в начало списка
-            placesList.prepend(addCard(newPlace, removeCard, showPopupImage, likeCard));
+            placesList.prepend(addCard(newPlace, removeCard, showPopupImage, likeCard, cardData.owner._id, cardData));
             closePopup(popupNewCard);
             formNewPlace.reset();
         })
