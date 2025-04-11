@@ -28,7 +28,7 @@
   когда введённые данные некорректны */
 } 
 
-.popup__input-error_active {
+.popup__error_visible {
   font-size: 12px;
   color: red;
 }
