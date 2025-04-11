@@ -17,6 +17,7 @@ export function getProfileContent() {
     if (res.ok) {
       return res.json();
     }
+    return Promise.reject(`Ошибка: ${res.status}`);
   });
 }
 
@@ -36,6 +37,7 @@ export function patchProfile(newProfileName, newProfileJob) {
     if (res.ok) {
       return res.json();
     }
+    return Promise.reject(`Ошибка: ${res.status}`);
   });
 }
 
@@ -52,6 +54,7 @@ export function getCardContent() {
     if (res.ok) {
       return res.json();
     }
+    return Promise.reject(`Ошибка: ${res.status}`);
   });
 }
 
@@ -73,6 +76,7 @@ export function postNewCard(newCard) {
     if (res.ok) {
       return res.json();
     }
+    return Promise.reject(`Ошибка: ${res.status}`);
   });
 }
 
@@ -89,6 +93,7 @@ export function putLike(cardId) {
     if (res.ok) {
       return res.json();
     }
+    return Promise.reject(`Ошибка: ${res.status}`);
   });
 }
 
@@ -103,6 +108,7 @@ export function deleteLike(cardId) {
     if (res.ok) {
       return res.json();
     }
+    return Promise.reject(`Ошибка: ${res.status}`);
   });
 }
 
@@ -134,5 +140,6 @@ export function patchAvatar(newAvatarSrc) {
     if (res.ok) {
       return res.json();
     }
+    return Promise.reject(`Ошибка: ${res.status}`);
   });
 }

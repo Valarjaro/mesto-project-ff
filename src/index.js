@@ -140,6 +140,9 @@ formEdit.addEventListener('submit', function(evt){
             closePopup(popupEdit);
             formEdit.reset();
         })
+        .catch(function(err) {
+            console.error('Ошибка:', err);
+        })
         .finally(function() {
             submitButton.disabled = false;
             submitButton.textContent = initialButtonText;
@@ -180,6 +183,9 @@ formNewPlace.addEventListener("submit", function(evt){
             closePopup(popupNewCard);
             formNewPlace.reset();
         })
+        .catch(function(err) {
+            console.error('Ошибка:', err);
+        })
         .finally(function() {
             submitButton.disabled = false;
             submitButton.textContent = initialButtonText;
@@ -204,6 +210,9 @@ formNewAvatar.addEventListener("submit", function(evt) {
             profileImage.src = res.avatar;
             closePopup(popupNewAvatar);
             formNewAvatar.reset();
+        })
+        .catch(function(err) {
+            console.error('Ошибка:', err);
         })
         .finally(function() {
             submitButton.disabled = false;
