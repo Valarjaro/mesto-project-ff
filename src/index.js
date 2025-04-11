@@ -129,19 +129,19 @@ formEdit.addEventListener('submit', function(evt){
     const initialButtonText = submitButton.textContent;
 
     submitButton.textContent = 'Сохранение...';
+    submitButton.disabled = true;
 
     // API 5. Редактирование профиля
     patchProfile(nameInput.value, jobInput.value)
         .then(function() {
-            // Обновляем контент страницы после успешного запроса
             return getPageContent();
         })
         .then(function() {
-            // Закрываем попап только после успешного выполнения всех операций
             closePopup(popupEdit);
+            formEdit.reset();
         })
         .finally(function() {
-            // Восстанавливаем кнопку в любом случае
+            submitButton.disabled = false;
             submitButton.textContent = initialButtonText;
         });
 });
@@ -168,6 +168,7 @@ formNewPlace.addEventListener("submit", function(evt){
     const initialButtonText = submitButton.textContent;
 
     submitButton.textContent = 'Сохранение...';
+    submitButton.disabled = true;
 
     postNewCard(newPlace)
         .then(function() {
@@ -176,21 +177,13 @@ formNewPlace.addEventListener("submit", function(evt){
         .then(function() {
             // Добавляем новую карточку в начало списка
             placesList.prepend(addCard(newPlace, removeCard, showPopupImage, likeCard));
-            // Закрываем попап после успешного выполнения
             closePopup(popupNewCard);
-            // Очищаем форму
             formNewPlace.reset();
         })
         .finally(function() {
-            // Восстанавливаем кнопку в любом случае
+            submitButton.disabled = false;
             submitButton.textContent = initialButtonText;
         });
-    // // //новая карточка попадала в начало контейнера с ними
-    // placesList.prepend(addCard(newPlace, removeCard, showPopupImage, likeCard));
-    // //А диалоговое окно после добавления автоматически закрывалось
-    // closePopup(popupNewCard);
-    // //и очищалась форма.
-    // formNewPlace.reset();
 });
 
 // 10 Редактирование аватара
@@ -204,6 +197,7 @@ formNewAvatar.addEventListener("submit", function(evt) {
     const initialButtonText = submitButton.textContent;
 
     submitButton.textContent = 'Сохранение...';
+    submitButton.disabled = true;
 
     patchAvatar(newAvatarSrc.value)
         .then(function(res) {
@@ -212,7 +206,7 @@ formNewAvatar.addEventListener("submit", function(evt) {
             formNewAvatar.reset();
         })
         .finally(function() {
-            // Восстанавливаем кнопку в любом случае
+            submitButton.disabled = false;
             submitButton.textContent = initialButtonText;
         });
 });
