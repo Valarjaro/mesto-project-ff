@@ -122,16 +122,29 @@ const formEdit = page.querySelector(".popup_type_edit .popup__form");
 const nameInput = formEdit.querySelector(".popup__input_type_name");
 const jobInput = formEdit.querySelector(".popup__input_type_description");
 
-function handleFormEditSubmit(evt) {
+formEdit.addEventListener('submit', function(evt){
     evt.preventDefault();
-    // API 5. Редактирование профиля
-    patchProfile(nameInput.value, jobInput.value).then(getPageContent())
-    closePopup(popupEdit);
-}
 
-// Прикрепляем обработчик к форме:
-// он будет следить за событием “submit” - «отправка»
-formEdit.addEventListener('submit', handleFormEditSubmit);
+    const submitButton = formEdit.querySelector('.popup__button');
+    const initialButtonText = submitButton.textContent;
+
+    submitButton.textContent = 'Сохранение...';
+
+    // API 5. Редактирование профиля
+    patchProfile(nameInput.value, jobInput.value)
+        .then(function() {
+            // Обновляем контент страницы после успешного запроса
+            return getPageContent();
+        })
+        .then(function() {
+            // Закрываем попап только после успешного выполнения всех операций
+            closePopup(popupEdit);
+        })
+        .finally(function() {
+            // Восстанавливаем кнопку в любом случае
+            submitButton.textContent = initialButtonText;
+        });
+});
 
 // 6. Добавление карточки
 
@@ -151,31 +164,55 @@ formNewPlace.addEventListener("submit", function(evt){
         link: placeImageUrl.value,
     };
 
-    postNewCard(newPlace).then(getPageContent());
+    const submitButton = formNewPlace.querySelector('.popup__button');
+    const initialButtonText = submitButton.textContent;
 
+    submitButton.textContent = 'Сохранение...';
 
-    // //новая карточка попадала в начало контейнера с ними
-    placesList.prepend(addCard(newPlace, removeCard, showPopupImage, likeCard));
-    
-    //А диалоговое окно после добавления автоматически закрывалось
-    closePopup(popupNewCard);
-    //и очищалась форма.
-    formNewPlace.reset();
+    postNewCard(newPlace)
+        .then(function() {
+        return getPageContent();
+        })
+        .then(function() {
+            // Добавляем новую карточку в начало списка
+            placesList.prepend(addCard(newPlace, removeCard, showPopupImage, likeCard));
+            // Закрываем попап после успешного выполнения
+            closePopup(popupNewCard);
+            // Очищаем форму
+            formNewPlace.reset();
+        })
+        .finally(function() {
+            // Восстанавливаем кнопку в любом случае
+            submitButton.textContent = initialButtonText;
+        });
+    // // //новая карточка попадала в начало контейнера с ними
+    // placesList.prepend(addCard(newPlace, removeCard, showPopupImage, likeCard));
+    // //А диалоговое окно после добавления автоматически закрывалось
+    // closePopup(popupNewCard);
+    // //и очищалась форма.
+    // formNewPlace.reset();
 });
 
 // 10 Редактирование аватара
 const formNewAvatar = page.querySelector(".popup_type_new-avatar .popup__form");
 const newAvatarSrc = formNewAvatar.querySelector(".popup__input_type_url");
 
-formNewAvatar.addEventListener("submit", function(evt){
+formNewAvatar.addEventListener("submit", function(evt) {
     evt.preventDefault();
 
+    const submitButton = formNewAvatar.querySelector('.popup__button');
+    const initialButtonText = submitButton.textContent;
+
+    submitButton.textContent = 'Сохранение...';
+
     patchAvatar(newAvatarSrc.value)
-        .then(res => {
+        .then(function(res) {
             profileImage.src = res.avatar;
             closePopup(popupNewAvatar);
+            formNewAvatar.reset();
         })
-        
-        formNewAvatar.reset();
-    // closePopup(popupNewAvatar);
+        .finally(function() {
+            // Восстанавливаем кнопку в любом случае
+            submitButton.textContent = initialButtonText;
+        });
 });
